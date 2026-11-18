@@ -58,7 +58,7 @@ Input Image (H x W x 3)
    └── [Channel 6]    Laplacian Gradient: 2nd derivative edge map normalized to [0, 255], capturing tampering boundary discontinuities.
 ```
 
-$$\text{Input Tensor} = \text{Concat}(\text{RGB}_{[3]}, \text{NoiseResidual}_{[3]}, \text{Laplacian}_{[1]}) \in \mathbb{R}^{7 \times 224 \times 224}$$
+$$\mathbf{X}_{\text{input}} = \text{Concat}(\mathbf{X}_{\text{RGB}}, \mathbf{X}_{\text{residual}}, \mathbf{X}_{\text{laplacian}}) \in \mathbb{R}^{7 \times 224 \times 224}$$
 
 ---
 
@@ -89,7 +89,7 @@ The model is trained on the benchmark **CASIA 2.0 Image Tampering Detection Data
 
 ### Data Generation Pipeline:
 1. **Multi-Quality Compression Generation:** Images are exported across JPEG quality factors $Q \in \{30, 40, 50, 60, 70, 80, 90\}$.
-2. **Dataset Composition:** Subsets from multiple quality tiers ($Q30, Q50, Q70, Q90$) are concatenated into a consolidated training pool.
+2. **Dataset Composition:** Subsets from multiple quality tiers (`Q30`, `Q50`, `Q70`, `Q90`) are concatenated into a consolidated training pool.
 3. **Data Augmentations:**
    - 50% chance of random dynamic JPEG re-compression.
    - 50% random horizontal flip.
@@ -103,11 +103,11 @@ The model is trained on the benchmark **CASIA 2.0 Image Tampering Detection Data
 
 | Parameter | Configuration |
 |---|---|
-| **Optimizer** | Adam ($\text{lr} = 5\times 10^{-5}$, $\text{weight\_decay} = 1\times 10^{-4}$) |
-| **LR Scheduler** | StepLR ($\text{step\_size} = 10$, $\gamma = 0.5$) |
-| **Loss Function** | Cross-Entropy with Label Smoothing ($0.1$) + Hard Example Mining (OHEM) |
+| **Optimizer** | Adam (`lr = 5e-5`, `weight_decay = 1e-4`) |
+| **LR Scheduler** | StepLR (`step_size = 10`, `gamma = 0.5`) |
+| **Loss Function** | Cross-Entropy with Label Smoothing (`0.1`) + Hard Example Mining (OHEM) |
 | **Hard Mining Ratio** | Top 70% hardest loss samples per mini-batch |
-| **Gradient Clipping** | Max norm $= 1.0$ |
+| **Gradient Clipping** | Max norm = `1.0` |
 | **Batch Size** | 16 |
 | **Train/Test Split** | 80% Train / 20% Test |
 | **Epochs** | 35 |
@@ -121,7 +121,7 @@ On an independent test set composed of mixed-quality compressed images:
 | Metric | Score |
 |---|---|
 | **Test Accuracy** | **~81.38%** |
-| **Resilience** | Robust against heavy JPEG compression ($Q=30$ through $Q=90$) |
+| **Resilience** | Robust against heavy JPEG compression (Q=30 through Q=90) |
 
 ---
 
